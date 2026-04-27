@@ -1,5 +1,5 @@
-from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.linear_model import LogisticRegression
 from xgboost import XGBClassifier
 
 
@@ -13,7 +13,8 @@ def train_models(X_train, y_train):
     rf = RandomForestClassifier(
         n_estimators=200,
         random_state=42,
-        class_weight="balanced"
+        class_weight="balanced",
+        n_jobs=-1,
     )
     rf.fit(X_train, y_train)
     models["Random Forest"] = rf
@@ -24,7 +25,8 @@ def train_models(X_train, y_train):
         learning_rate=0.1,
         scale_pos_weight=10,
         eval_metric="logloss",
-        use_label_encoder=False
+        random_state=42,
+        n_jobs=-1,
     )
     xgb.fit(X_train, y_train)
     models["XGBoost"] = xgb
