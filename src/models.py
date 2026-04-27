@@ -10,7 +10,6 @@ def train_models(X_train, y_train):
         max_iter=3000,
         class_weight="balanced",
         solver="saga",
-        n_jobs=-1,
         random_state=42,
     )
     lr.fit(X_train, y_train)
