@@ -1,0 +1,29 @@
+# Data and artifacts
+data/
+models/
+reports/figures/
+*.csv
+*.xlsx
+*.parquet
+*.pkl
+*.joblib
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Environment
+.env
+.env.*
+
+# OS / IDE
+.DS_Store
+.vscode/
+.idea/
