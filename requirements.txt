@@ -6,3 +6,6 @@ seaborn
 imbalanced-learn
 xgboost
 joblib
+fastapi
+uvicorn
+pydantic
