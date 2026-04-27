@@ -6,7 +6,13 @@ from xgboost import XGBClassifier
 def train_models(X_train, y_train):
     models = {}
 
-    lr = LogisticRegression(max_iter=1000, class_weight="balanced")
+    lr = LogisticRegression(
+        max_iter=3000,
+        class_weight="balanced",
+        solver="saga",
+        n_jobs=-1,
+        random_state=42,
+    )
     lr.fit(X_train, y_train)
     models["Logistic Regression"] = lr
 
