@@ -19,16 +19,12 @@ def load_dataset(data_path: str) -> pd.DataFrame:
     path = Path(data_path)
 
     if not path.exists():
-        raise FileNotFoundError(
-            f"Dataset not found at '{data_path}'."
-        )
+        raise FileNotFoundError(f"Dataset not found at '{data_path}'.")
 
     df = pd.read_csv(path)
 
     if TARGET_COLUMN not in df.columns:
-        raise ValueError(
-            f"Target column '{TARGET_COLUMN}' not found."
-        )
+        raise ValueError(f"Target column '{TARGET_COLUMN}' not found.")
 
     return df
 
@@ -47,11 +43,15 @@ def main(data_path: str) -> None:
         random_state=42,
     )
 
+    scaler = StandardScaler()
+    X_train_scaled = scaler.fit_transform(X_train)
+    X_test_scaled = scaler.transform(X_test)
+
     smote = SMOTE(random_state=42)
-    X_train_res, y_train_res = smote.fit_resample(X_train, y_train)
+    X_train_res, y_train_res = smote.fit_resample(X_train_scaled, y_train)
 
     models = train_models(X_train_res, y_train_res)
-    results = evaluate_models(models, X_test, y_test)
+    results = evaluate_models(models, X_test_scaled, y_test)
 
     print("\nModel comparison with optimal threshold:\n")
     print(results.sort_values(by="pr_auc", ascending=False).to_string(index=False))
@@ -60,17 +60,24 @@ def main(data_path: str) -> None:
     best_model = models[best_row["model"]]
 
     pipeline = Pipeline([
-        ("scaler", StandardScaler()),
+        ("scaler", scaler),
         ("model", best_model),
     ])
 
     MODEL_OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
-    joblib.dump({
-        "pipeline": pipeline,
-        "threshold": best_row["threshold"],
-    }, MODEL_OUTPUT_PATH)
+    joblib.dump(
+        {
+            "pipeline": pipeline,
+            "threshold": float(best_row["threshold"]),
+            "model_name": str(best_row["model"]),
+            "feature_count": X.shape[1],
+            "feature_names": list(X.columns),
+        },
+        MODEL_OUTPUT_PATH,
+    )
 
     print(f"\nSaved pipeline with threshold: {best_row['threshold']:.4f}")
+    print(f"Best model: {best_row['model']}")
     print(f"Path: {MODEL_OUTPUT_PATH}")
 
 
