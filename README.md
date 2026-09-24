@@ -121,15 +121,7 @@ python -m src.train --data-path data/creditcard.csv
 
 The training script prints a comparison between models using fraud-oriented metrics.
 
-Example metrics table:
-
-```text
-model                 precision    recall    f1_score    roc_auc    pr_auc
-Logistic Regression  0.86         0.62      0.72        0.96       0.75
-Random Forest        0.94         0.79      0.86        0.98       0.84
-```
-
-> The exact values may vary depending on environment, split and configuration.
+The training command prints a comparison table with the metrics above. Results are generated from the downloaded dataset and the current configuration; no benchmark scores are claimed in this repository.
 
 ## Why These Metrics Matter
 
